@@ -476,6 +476,7 @@
                 border: solid var(--primary-blue) 1px
             }
 
+
         .gallery-section {
             max-width: 1200px;
             margin: 0 auto 40px auto;
@@ -580,35 +581,6 @@
             left: -10px;
         }
 
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.85);
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box;
-            padding: 20px;
-        }
-
-        #lightbox-img {
-            border-radius: 12px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
         /* עיצוב חלק שאלות נפוצות */
         .faq-section {
             max-width: 1200px;
@@ -779,6 +751,300 @@
 
         .is-playing .volume-container {
             display: flex;
+        }
+
+
+        /* --- עיצוב Lightbox משודרג --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        .image-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 80%;
+            max-height: 75%;
+            cursor: pointer;
+        }
+
+        #lightbox-img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            left: 35px; /* ממוקם בצד שמאל לנוחות */
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10002;
+            transition: color 0.2s;
+        }
+
+            .lightbox-close:hover {
+                color: #ff4d4d;
+            }
+
+        .lightbox-controls-top {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            z-index: 10002;
+        }
+
+        .lightbox-select {
+            display: none;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            outline: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .lightbox.slideshow-active .lightbox-select {
+            display: block;
+        }
+
+        .lightbox-select option {
+            background: #222;
+            color: white;
+        }
+
+        /* כפתור הפעלה ממורכז במצגת */
+        .lightbox-slideshow-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #ffffff;
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10003;
+            opacity: 0;
+            transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-wrapper:hover .lightbox-slideshow-center {
+            opacity: 1;
+        }
+
+        .tooltip-text {
+            position: absolute;
+            bottom: -35px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10004;
+        }
+
+        .image-wrapper:hover .tooltip-text {
+            opacity: 1;
+        }
+
+        /* כפתורי ניווט צדדיים */
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: none;
+            font-size: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            z-index: 10001;
+            backdrop-filter: blur(4px);
+            transition: background 0.2s, transform 0.2s;
+        }
+
+            .lightbox-prev:hover, .lightbox-next:hover {
+                background: rgba(0, 0, 0, 0.75);
+                transform: translateY(-50%) scale(1.1);
+            }
+
+        .lightbox-prev {
+            right: 25px;
+            left: auto;
+        }
+
+        .lightbox-next {
+            left: 25px;
+            right: auto;
+        }
+
+        .lightbox.slideshow-active .lightbox-prev,
+        .lightbox.slideshow-active .lightbox-next {
+            display: none;
+        }
+
+        /* עיגולי ניווט בתחתית */
+        .dots-container {
+            position: absolute;
+            bottom: 25px;
+            display: flex;
+            gap: 10px;
+            z-index: 10002;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+            .dot.active {
+                background-color: #ffffff;
+                transform: scale(1.3);
+            }
+
+        /* --- אפקטי מעבר --- */
+        .effect-zoom {
+            animation: animZoom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes animZoom {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .effect-fade {
+            animation: animFade 0.5s ease-in-out;
+        }
+
+        @keyframes animFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .effect-slide {
+            animation: animSlide 0.4s ease-out;
+        }
+
+        @keyframes animSlide {
+            from {
+                transform: translateX(120px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .effect-rotate {
+            animation: animRotate 0.5s ease-out;
+        }
+
+        @keyframes animRotate {
+            from {
+                transform: scale(0.5) rotate(-10deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .effect-slidedown {
+            animation: animSlideDown 0.4s ease-out;
+        }
+
+        @keyframes animSlideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .effect-flash {
+            animation: animFlash 0.4s ease-in-out;
+        }
+
+        @keyframes animFlash {
+            0% {
+                opacity: 0;
+                filter: brightness(2);
+            }
+
+            50% {
+                opacity: 0.8;
+                filter: brightness(1.5);
+            }
+
+            100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
         }
     </style>
 </head>
@@ -1079,35 +1345,34 @@
     </div>
     </br>
 
-    <div class="gallery-section">
-        <!--<h2 class="gallery-title">📸 גלריית חוויות ותמונות</h2>-->
 
+    <div class="gallery-section">
         <div class="gallery-carousel-wrapper">
             <button class="carousel-btn prev-btn" onclick="scrollGallery(-1)">❮</button>
 
             <div class="gallery-grid" id="galleryGrid">
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(0)">
                     <img src="1.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(1)">
                     <img src="2.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(2)">
                     <img src="4.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(3)">
                     <img src="3.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(4)">
                     <img src="5.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(5)">
                     <img src="6.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(6)">
                     <img src="7.png" alt="תמונה מהנופש">
                 </div>
-                <div class="gallery-item" onclick="openLightbox(this)">
+                <div class="gallery-item" onclick="openLightbox(7)">
                     <img src="8.png" alt="תמונה מהנופש">
                 </div>
             </div>
@@ -1116,11 +1381,42 @@
         </div>
     </div>
 
-    <!-- חלון תצוגה מוגדלת (Lightbox) -->
+    <!-- חלון Lightbox משודרג -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
-        <img id="lightbox-img" src="" alt="תמונה מוגדלת">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+
+        <div class="lightbox-controls-top" onclick="event.stopPropagation()">
+            <select id="effectSelect" class="lightbox-select">
+                <option value="zoom">אפקט: קפיצה / הגדלה</option>
+                <option value="fade">אפקט: עמעום (Fade)</option>
+                <option value="slide">אפקט: החלקה אופקית (Slide)</option>
+                <option value="rotate">אפקט: סיבוב והגדלה</option>
+                <option value="slidedown">אפקט: החלקה מלמעלה</option>
+                <option value="flash">אפקט: הבלחה / פלאש</option>
+            </select>
+        </div>
+
+        <!-- כפתור קודם (מימין ב-RTL) -->
+        <button class="lightbox-prev" onclick="changeImage(-1, event)">❮</button>
+
+        <!-- תמונה וכפתור מרכזי למצגת -->
+        <div class="image-wrapper" onclick="toggleSlideshow(event)">
+            <img id="lightbox-img" src="" alt="תמונה מוגדלת">
+            <div id="slideshow-icon" class="lightbox-slideshow-center">▶</div>
+            <div id="tooltipText" class="tooltip-text">לחץ להפעלת מצגת</div>
+        </div>
+
+        <!-- כפתור הבא (משמאל ב-RTL) -->
+        <button class="lightbox-next" onclick="changeImage(1, event)">❯</button>
+
+        <!-- עיגולי ניווט -->
+        <div id="dotsContainer" class="dots-container" onclick="event.stopPropagation()"></div>
     </div>
+
+
+
+
+
 
     <!-- חלק שאלות נפוצות -->
     <div class="faq-section">
@@ -1220,18 +1516,133 @@
 
         // הפעלת האפקט מיד עם טעינת העמוד
         window.onload = startContinuousConfetti;
-        function openLightbox(element) {
-            const img = element.querySelector('img');
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
 
-            lightboxImg.src = img.src;
-            lightbox.style.display = 'flex';
+
+
+
+
+
+        // מערך נתיבי התמונות של הגלרייה שלך
+        const images = [
+            "1.png",
+            "2.png",
+            "4.png",
+            "3.png",
+            "5.png",
+            "6.png",
+            "7.png",
+            "8.png"
+        ];
+
+        let currentImageIndex = 0;
+        let slideshowInterval = null;
+
+        // גלילה אופקית של הגלרייה
+        function scrollGallery(direction) {
+            const grid = document.getElementById('galleryGrid');
+            const scrollAmount = grid.clientWidth * 0.75;
+            grid.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        // ניהול עיגולי הניווט
+        function initDots() {
+            const dotsContainer = document.getElementById('dotsContainer');
+            dotsContainer.innerHTML = '';
+            images.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot' + (index === currentImageIndex ? ' active' : '');
+                dot.onclick = () => goToImage(index);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentImageIndex);
+            });
+        }
+
+        // פתיחת Lightbox לפי אינדקס
+        function openLightbox(index) {
+            currentImageIndex = index;
+            initDots();
+            applyImageWithEffect();
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+
+        function goToImage(index) {
+            currentImageIndex = index;
+            applyImageWithEffect();
+        }
+
+        function changeImage(direction, event) {
+            if (event) event.stopPropagation();
+
+            currentImageIndex += direction;
+            if (currentImageIndex >= images.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = images.length - 1;
+
+            applyImageWithEffect();
+        }
+
+        function applyImageWithEffect() {
+            const imgElement = document.getElementById('lightbox-img');
+            const effectType = document.getElementById('effectSelect').value;
+
+            imgElement.className = '';
+            void imgElement.offsetWidth; // Force Reflow להפעלת האנימציה מחדש
+
+            imgElement.src = images[currentImageIndex];
+            imgElement.classList.add('effect-' + effectType);
+
+            updateDots();
+        }
+
+        // הפעלה / עצירה של המצגת
+        function toggleSlideshow(event) {
+            if (event) event.stopPropagation();
+            const icon = document.getElementById('slideshow-icon');
+            const tooltip = document.getElementById('tooltipText');
+            const lightbox = document.getElementById('lightbox');
+
+            if (slideshowInterval) {
+                stopSlideshow();
+            } else {
+                icon.innerText = "⏸";
+                tooltip.innerText = "לחץ לעצירת מצגת";
+                lightbox.classList.add('slideshow-active');
+                slideshowInterval = setInterval(() => { changeImage(1); }, 3000);
+            }
+        }
+
+        function stopSlideshow() {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+                slideshowInterval = null;
+
+                const icon = document.getElementById('slideshow-icon');
+                const tooltip = document.getElementById('tooltipText');
+                const lightbox = document.getElementById('lightbox');
+
+                if (icon) icon.innerText = "▶";
+                if (tooltip) tooltip.innerText = "לחץ להפעלת מצגת";
+                if (lightbox) lightbox.classList.remove('slideshow-active');
+            }
         }
 
         function closeLightbox() {
+            stopSlideshow();
             document.getElementById('lightbox').style.display = 'none';
         }
+
+
+
+
+        /////
 
         function toggleDetails(btn) {
             const details = btn.nextElementSibling;
@@ -1261,8 +1672,8 @@
         const progressBar = document.getElementById('progressBar');
         const progressContainer = document.getElementById('progressContainer');
 
-     function toggleAudio() {
-         const container = document.querySelector('.audio-player-container');
+        function toggleAudio() {
+            const container = document.querySelector('.audio-player-container');
             if (audio.paused) {
                 audio.play().then(() => {
                     audioBtn.innerText = "🔇 עצור מוזיקה";
@@ -1423,14 +1834,14 @@
                 grid.style.transition = 'none';
                 grid.insertBefore(grid.lastElementChild, grid.firstElementChild); // העברת התמונה האחרונה להתחלה
                 grid.style.transform = `translateX(${step}px)`; // הכנה בערך חיובי
-              
-                    requestAnimationFrame(() => {
-                        grid.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                        grid.style.transform = 'translateX(0)';
-                        setTimeout(() => {
-                            isAnimating = false;
-                        }, 400);
-                    });
+
+                requestAnimationFrame(() => {
+                    grid.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                    grid.style.transform = 'translateX(0)';
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, 400);
+                });
             }
         }
     </script>

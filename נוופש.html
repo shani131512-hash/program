@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>תכנייה ומידע לנופש משפחתי</title>
@@ -123,6 +124,7 @@
             display: flex;
             justify-content: center;
             gap: 12px;
+            flex-direction: row-reverse;
         }
 
         .timer-unit {
@@ -249,7 +251,7 @@
             color: white;
             padding: 18px;
             text-align: center;
-            min-height:89px;
+            min-height: 89px;
         }
 
             .day-header h2 {
@@ -454,6 +456,7 @@
                 max-width: 220px;
             }
         }
+
         .mail {
             display: inline-block;
             margin-top: 15px;
@@ -466,6 +469,7 @@
             font-size: 0.9rem;
             border: solid white 1px
         }
+
             .mail:Hover {
                 background-color: transparent;
                 color: var(--primary-blue);
@@ -489,47 +493,48 @@
             font-size: 1.5rem;
         }
 
-            .gallery-item img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: transform 0.3s ease;
-            }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
 
-            .gallery-item:hover img {
-                transform: scale(1.08);             }
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
 
-            .gallery-item::after {
-                content: '⤢';
-                position: absolute;
-                bottom: 4px;
-                right: 4px;
-                font-size: 1.2rem;
-                font-weight: bold;
-                background: rgba(0, 0, 0, 0.65);
-                color: white;
-                width: 28px;
-                height: 28px;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0.9;
-                pointer-events: none;
-                z-index: 2;
-            }
+        .gallery-item::after {
+            content: '⤢';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+            pointer-events: none;
+            z-index: 2;
+        }
 
         .gallery-carousel-wrapper {
             position: relative;
             display: flex;
             align-items: center;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .gallery-grid {
             display: grid;
             grid-auto-flow: column;
-            grid-auto-columns: calc(25% - 11.25px); 
+            grid-auto-columns: calc(25% - 11.25px);
             gap: 15px;
             width: 100%;
         }
@@ -560,6 +565,7 @@
             border-radius: 50%;
             z-index: 10;
             transition: background 0.3s ease;
+            background-color: #f7f7f782
         }
 
             .carousel-btn:hover {
@@ -744,14 +750,14 @@
 
             <!-- תפריט בחירת שירים שיופיע בעת הפעלה -->
             <div class="playlist-dropdown" id="playlistMenu">
-                <button onclick="selectTrack(6)" id="track-0">🎵 מנגינת רקע 1</button>
-                <button onclick="selectTrack(1)" id="track-1">🎵 מנגינת רקע 2</button>
-                <button onclick="selectTrack(2)" id="track-2">🎵 מנגינת רקע 3</button>
-                <button onclick="selectTrack(3)" id="track-2">🎵 מנגינת רקע 4</button>
-                <button onclick="selectTrack(4)" id="track-2">🎵 מנגינת רקע 5</button>
-                <button onclick="selectTrack(5)" id="track-2">🎵 מנגינת רקע 6</button>
-                <button onclick="selectTrack(7)" id="track-2">🎵 מנגינת רקע 7</button>
-                <button onclick="selectTrack(8)" id="track-2">🎵 מנגינת רקע 8</button>
+                <button onclick="selectTrack(1)" id="track-1">🎵 קצבי קלאס</button>
+                <button onclick="selectTrack(8)" id="track-8">🎵 קצבי תוסס</button>
+                <button onclick="selectTrack(6)" id="track-6">🎵 תופים</button>
+                <button onclick="selectTrack(2)" id="track-2">🎵 מצלתיים </button>
+                <button onclick="selectTrack(5)" id="track-5">🎵 ציוצי ציפורים</button>
+                <button onclick="selectTrack(3)" id="track-3">🎵 טיפטוף גשם</button>
+                <button onclick="selectTrack(4)" id="track-4">🎵 סירה אפריקאית</button>
+                <button onclick="selectTrack(7)" id="track-7">🎵 שושנה אדומה</button>
             </div>
         </div>
 
@@ -1117,6 +1123,38 @@
     </footer>
 
     <script>
+        // פונקציה שמפעילה זריקת קונפטי במרווחי זמן קבועים
+        function startContinuousConfetti() {
+            const duration = 15 * 1000; // משך כל גל (למשל 15 שניות)
+            const animationEnd = Date.now() + duration;
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+
+                // יצירת קונפטי משני צדי המסך
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.7 }
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.7 }
+                });
+
+                // הפעלה מחדש בלולאה כשהזמן מסתיים
+                if (timeLeft <= 0) {
+                    startContinuousConfetti();
+                    clearInterval(interval);
+                }
+            }, 250); // מופעל כל 250 מילי-שניות
+        }
+
+        // הפעלת האפקט מיד עם טעינת העמוד
+        window.onload = startContinuousConfetti;
         function openLightbox(element) {
             const img = element.querySelector('img');
             const lightbox = document.getElementById('lightbox');
@@ -1147,12 +1185,15 @@
             faqItem.classList.toggle('active');
         }
 
-        let currentTrackIndex = 0;
+        let currentTrackIndex = 1; // התחלה מהשיר הראשון
+        const totalTracks = 8; // מספר השירים הכולל
+
         const audio = document.getElementById('bgAudio');
         const audioSource = document.getElementById('audioSource');
         const audioBtn = document.getElementById('audioBtn');
         const playlistMenu = document.getElementById('playlistMenu');
 
+        // הפעלה או עצירה של המוזיקה
         function toggleAudio() {
             if (audio.paused) {
                 audio.play();
@@ -1166,7 +1207,9 @@
             }
         }
 
+        // בחירת שיר לפי מספר
         function selectTrack(trackNumber) {
+            currentTrackIndex = trackNumber; // עדכון השיר הנוכחי
             const songUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-" + trackNumber + ".mp3";
 
             audioSource.src = songUrl;
@@ -1177,9 +1220,8 @@
             updateActiveButton();
         }
 
+        // סימון השיר הפעיל בתפריט
         function updateActiveButton() {
-            const totalTracks = 8;
-
             for (let i = 1; i <= totalTracks; i++) {
                 const btn = document.getElementById(`track-${i}`);
                 if (btn) {
@@ -1190,8 +1232,6 @@
 
         // מעבר אוטומטי לשיר הבא בסיום
         audio.onended = function () {
-            const totalTracks = 8;
-
             currentTrackIndex = (currentTrackIndex % totalTracks) + 1;
             selectTrack(currentTrackIndex);
         };

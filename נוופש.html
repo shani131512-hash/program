@@ -693,45 +693,93 @@
             margin-bottom: -15px;
         }
 
-
         .playlist-dropdown {
             display: none;
             position: absolute;
             top: calc(100% - 10px);
             right: 0;
             background-color: #ffffff;
-            min-width: 180px;
+            min-width: 200px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.15);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid #e0e0e0;
+            padding: 10px 0;
         }
 
         .audio-player-container:hover .playlist-dropdown {
             display: block;
         }
 
-        .playlist-dropdown button {
-            width: 100%;
-            padding: 10px 14px;
-            background: none;
-            border: none;
-            text-align: right;
-            font-size: 14px;
+            .playlist-dropdown button {
+                width: 100%;
+                padding: 10px 14px;
+                background: none;
+                border: none;
+                text-align: right;
+                font-size: 14px;
+                cursor: pointer;
+                color: #333;
+                transition: background 0.2s;
+            }
+
+                .playlist-dropdown button:hover {
+                    background-color: #f1f1f1;
+                }
+
+                .playlist-dropdown button.active {
+                    font-weight: bold;
+                    color: #2980b9;
+                    background-color: #eaf2f8;
+                }
+
+        /* עיצוב פס ההתקדמות */
+        .progress-container {
+            width: calc(100% - 20px);
+            margin: 5px 10px 10px 10px;
+            background-color: #e0e0e0;
+            height: 6px;
+            border-radius: 3px;
             cursor: pointer;
-            color: #333;
-            transition: background 0.2s;
+            overflow: hidden;
         }
 
-            .playlist-dropdown button:hover {
-                background-color: #f1f1f1;
-            }
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #2980b9;
+            transition: width 0.1s linear;
+        }
 
-            .playlist-dropdown button.active {
-                font-weight: bold;
-                color: #2980b9;
-                background-color: #eaf2f8;
+        /* עיצוב עוצמת השמע */
+        .volume-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 5px 10px 10px 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+
+            .volume-container input[type="range"] {
+                width: 100%;
+                cursor: pointer;
             }
+        /* הסתרת הבר והווליום כשהנגן כבוי */
+        .progress-container,
+        .volume-container {
+            display: none;
+        }
+
+        /* הצגתם רק כשהמוזיקה פועלת */
+        .is-playing .progress-container {
+            display: block;
+        }
+
+        .is-playing .volume-container {
+            display: flex;
+        }
     </style>
 </head>
 <body>
@@ -749,15 +797,32 @@
             <button class="audio-toggle-btn" id="audioBtn" onclick="toggleAudio()">🔊 הפעל מוזיקה</button>
 
             <!-- תפריט בחירת שירים שיופיע בעת הפעלה -->
+            <!-- תפריט הנגן שכולל את השליטה בשמע, התקדמות השיר והרשימה -->
             <div class="playlist-dropdown" id="playlistMenu">
-                <button onclick="selectTrack(1)" id="track-1">🎵 קצבי קלאס</button>
-                <button onclick="selectTrack(8)" id="track-8">🎵 קצבי תוסס</button>
-                <button onclick="selectTrack(6)" id="track-6">🎵 תופים</button>
-                <button onclick="selectTrack(2)" id="track-2">🎵 מצלתיים </button>
-                <button onclick="selectTrack(5)" id="track-5">🎵 ציוצי ציפורים</button>
-                <button onclick="selectTrack(3)" id="track-3">🎵 טיפטוף גשם</button>
-                <button onclick="selectTrack(4)" id="track-4">🎵 סירה אפריקאית</button>
-                <button onclick="selectTrack(7)" id="track-7">🎵 שושנה אדומה</button>
+
+                <!-- פס התקדמות בשיר -->
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <!-- שליטה בעוצמת השמע (ווליום) -->
+                <div class="volume-container">
+                    <span>🔈</span>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+                    <span>🔊</span>
+                </div>
+
+                <!-- רשימת השירים -->
+                <div class="tracks-list">
+                    <button onclick="selectTrack(1)" id="track-1">🎵 קצבי קלאס</button>
+                    <button onclick="selectTrack(8)" id="track-8">🎵 קצבי תוסס</button>
+                    <button onclick="selectTrack(6)" id="track-6">🎵 תופים</button>
+                    <button onclick="selectTrack(2)" id="track-2">🎵 מצלתיים</button>
+                    <button onclick="selectTrack(5)" id="track-5">🎵 ציוצי ציפורים</button>
+                    <button onclick="selectTrack(3)" id="track-3">🎵 טיפטוף גשם</button>
+                    <button onclick="selectTrack(4)" id="track-4">🎵 סירה אפריקאית</button>
+                    <button onclick="selectTrack(7)" id="track-7">🎵 שושנה אדומה</button>
+                </div>
             </div>
         </div>
 
@@ -1185,39 +1250,58 @@
             faqItem.classList.toggle('active');
         }
 
-        let currentTrackIndex = 1; // התחלה מהשיר הראשון
-        const totalTracks = 8; // מספר השירים הכולל
+        let currentTrackIndex = 1;
+        const totalTracks = 8;
 
         const audio = document.getElementById('bgAudio');
         const audioSource = document.getElementById('audioSource');
         const audioBtn = document.getElementById('audioBtn');
         const playlistMenu = document.getElementById('playlistMenu');
+        const volumeControl = document.getElementById('volumeControl');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
 
-        // הפעלה או עצירה של המוזיקה
-        function toggleAudio() {
+     function toggleAudio() {
+         const container = document.querySelector('.audio-player-container');
             if (audio.paused) {
-                audio.play();
-                audioBtn.innerText = "🔇 עצור מוזיקה";
-                playlistMenu.classList.add('show-menu');
-                updateActiveButton();
+                audio.play().then(() => {
+                    audioBtn.innerText = "🔇 עצור מוזיקה";
+                    // playlistMenu.classList.add('show-menu');
+                    if (container) container.classList.add('is-playing');
+                    updateActiveButton();
+                }).catch(error => {
+                    console.log("הפעלת המוזיקה נחסמה:", error);
+                });
             } else {
                 audio.pause();
+                audio.currentTime = 0; // החזרה לתחילת השיר
+
+                currentTrackIndex = 1; // איפוס לשיר הראשון
+                audioSource.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                audio.load();
+                if (container) container.classList.remove('is-playing');
                 audioBtn.innerText = "🔊 הפעל מוזיקה";
-                playlistMenu.classList.remove('show-menu');
+                // playlistMenu.classList.remove('show-menu');
+                updateActiveButton();
             }
         }
 
         // בחירת שיר לפי מספר
         function selectTrack(trackNumber) {
-            currentTrackIndex = trackNumber; // עדכון השיר הנוכחי
+            const container = document.querySelector('.audio-player-container');
+            currentTrackIndex = trackNumber;
             const songUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-" + trackNumber + ".mp3";
 
             audioSource.src = songUrl;
             audio.load();
-            audio.play();
-
-            audioBtn.innerText = "🔇 עצור מוזיקה";
-            updateActiveButton();
+            audio.play().then(() => {
+                audioBtn.innerText = "🔇 עצור מוזיקה";
+                // playlistMenu.classList.add('show-menu');
+                if (container) container.classList.add('is-playing'); // וידוא שהפסים מוצגים בעת בחירת שיר
+                updateActiveButton();
+            }).catch(error => {
+                console.log("הפעלת השיר נחסמה:", error);
+            });
         }
 
         // סימון השיר הפעיל בתפריט
@@ -1230,11 +1314,43 @@
             }
         }
 
+        // שליטה בעוצמת השמע
+        if (volumeControl) {
+            volumeControl.addEventListener('input', (e) => {
+                audio.volume = e.target.value;
+            });
+        }
+
+        // עדכון פס ההתקדמות בזמן נגינה
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+            } else {
+                progressBar.style.width = '0%';
+            }
+        });
+
+        // קפיצה לנקודה בשיר בלחיצה על פס ההתקדמות
+        if (progressContainer) {
+            progressContainer.addEventListener('click', (e) => {
+                const width = progressContainer.clientWidth;
+                const clickX = e.offsetX;
+                const duration = audio.duration;
+                if (duration) {
+                    audio.currentTime = (clickX / width) * duration;
+                }
+            });
+        }
+
         // מעבר אוטומטי לשיר הבא בסיום
         audio.onended = function () {
             currentTrackIndex = (currentTrackIndex % totalTracks) + 1;
             selectTrack(currentTrackIndex);
         };
+
+        // סימון התחלתי ברגע שהדף נטען
+        updateActiveButton();
 
 
 

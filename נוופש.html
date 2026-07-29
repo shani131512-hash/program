@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תכנייה ומידע לנופש משפחתי</title>
+    <style>
+        :root {
+            --bg-color: #f0f9fc;
+            --card-bg: #ffffff;
+            --text-color: #2d3436;
+            --shadow: 0 10px 20px rgba(56, 196, 236, 0.12);
+            --primary-pink: #ff3385;
+            --primary-blue: #22b8e0;
+            --light-pink: #ffa0c5;
+            --dark-blue: #0093be;
+            --day1-color: var(--primary-pink);
+            --day2-color: var(--primary-blue);
+            --day3-color: #ff66a8;
+            --day4-color: #00a0cb;
+            --info-color: var(--primary-pink);
+            --text-muted: #636e72;
+            --details-bg: #f4fbfd;
+            --details-border: #dff2f8;
+        }
+
+        body.dark-mode {
+            --bg-color: #1a1d20;
+            --card-bg: #2d3238;
+            --text-color: #f1f2f6;
+            --text-muted: #a4b0be;
+            --details-bg: #22272c;
+            --details-border: #3a4149;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .top-actions {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn, .audio-toggle-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--primary-blue);
+            color: var(--dark-blue);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: var(--shadow);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            box-sizing: border-box;
+        }
+
+            .action-btn:hover, .audio-toggle-btn:hover {
+                background-color: var(--primary-blue);
+                color: white;
+            }
+
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #22b8e0 0%, #ff3385 100%);
+            border-radius: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(255, 51, 133, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-logo {
+            max-width: 320px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+            background: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+        }
+
+        /* ספירה לאחור */
+        .countdown-container {
+            background: var(--card-bg);
+            max-width: 450px;
+            margin: 0 auto 25px auto;
+            padding: 15px 20px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 2px solid #bcebfb;
+        }
+
+        .countdown-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 10px;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .timer-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 60px;
+        }
+
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-pink);
+            background: #fff0f6;
+            width: 100%;
+            padding: 8px 0;
+            border-radius: 12px;
+            border: 1px solid #ffd1e3;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* רשת הלו"ז */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .day-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .day-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            }
+
+            .day-card.day-1 {
+                border-color: var(--day1-color);
+            }
+
+                .day-card.day-1 .day-header {
+                    background-color: var(--day1-color);
+                }
+
+                .day-card.day-1 .toggle-btn {
+                    background-color: #ffe6f0;
+                    color: var(--day1-color);
+                }
+
+                    .day-card.day-1 .toggle-btn:hover {
+                        background-color: var(--day1-color);
+                        color: white;
+                    }
+
+            .day-card.day-2 {
+                border-color: var(--day2-color);
+            }
+
+                .day-card.day-2 .day-header {
+                    background-color: var(--day2-color);
+                }
+
+                .day-card.day-2 .toggle-btn {
+                    background-color: #e6f7fc;
+                    color: var(--dark-blue);
+                }
+
+                    .day-card.day-2 .toggle-btn:hover {
+                        background-color: var(--day2-color);
+                        color: white;
+                    }
+
+            .day-card.day-3 {
+                border-color: var(--day3-color);
+            }
+
+                .day-card.day-3 .day-header {
+                    background-color: var(--day3-color);
+                }
+
+                .day-card.day-3 .toggle-btn {
+                    background-color: #ffeaf3;
+                    color: var(--day3-color);
+                }
+
+                    .day-card.day-3 .toggle-btn:hover {
+                        background-color: var(--day3-color);
+                        color: white;
+                    }
+
+            .day-card.day-4 {
+                border-color: var(--day4-color);
+            }
+
+                .day-card.day-4 .day-header {
+                    background-color: var(--day4-color);
+                }
+
+                .day-card.day-4 .toggle-btn {
+                    background-color: #e0f5fa;
+                    color: var(--day4-color);
+                }
+
+                    .day-card.day-4 .toggle-btn:hover {
+                        background-color: var(--day4-color);
+                        color: white;
+                    }
+
+        .day-header {
+            color: white;
+            padding: 18px;
+            text-align: center;
+            min-height:89px;
+        }
+
+            .day-header h2 {
+                margin: 0;
+                font-size: 1.5rem;
+            }
+
+            .day-header .date {
+                font-size: 0.9rem;
+                opacity: 0.95;
+                margin-top: 4px;
+            }
+
+        .timeline {
+            padding: 22px 18px;
+            list-style: none;
+            margin: 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-right: 18px;
+            margin-bottom: 22px;
+            border-right: 3px solid #eaf4f8;
+        }
+
+            .timeline-item:last-child {
+                margin-bottom: 0;
+            }
+
+        .day-1 .timeline-item::before {
+            background-color: var(--day1-color);
+        }
+
+        .day-2 .timeline-item::before {
+            background-color: var(--day2-color);
+        }
+
+        .day-3 .timeline-item::before {
+            background-color: var(--day3-color);
+        }
+
+        .day-4 .timeline-item::before {
+            background-color: var(--day4-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: -7px;
+            top: 4px;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .time {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .day-1 .time {
+            color: var(--day1-color);
+        }
+
+        .day-2 .time {
+            color: var(--dark-blue);
+        }
+
+        .day-3 .time {
+            color: var(--day3-color);
+        }
+
+        .day-4 .time {
+            color: var(--day4-color);
+        }
+
+        .event-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin: 2px 0;
+        }
+
+        .event-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin: 0 0 6px 0;
+            line-height: 1.4;
+        }
+
+        .toggle-btn {
+            border: none;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+            .toggle-btn:active {
+                transform: scale(0.96);
+            }
+
+        .extra-details {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            background-color: var(--details-bg);
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: 1px solid var(--details-border);
+            animation: fadeIn 0.3s ease;
+        }
+
+            .extra-details.open {
+                display: block;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* חלק מידע נוסף */
+        .info-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            border-top: 6px solid var(--info-color);
+        }
+
+            .info-card h3 {
+                margin-top: 0;
+                font-size: 1.25rem;
+                border-bottom: 2px dashed #e1f3f9;
+                padding-bottom: 10px;
+                margin-bottom: 15px;
+            }
+
+            .info-card ul {
+                padding-right: 20px;
+                margin: 0;
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+
+        footer {
+            text-align: center;
+            margin-top: 45px;
+            padding: 22px;
+            background-color: var(--card-bg);
+            border-radius: 18px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #e1f3f9;
+        }
+
+        @media print {
+            .top-actions, .toggle-btn {
+                display: none !important;
+            }
+
+            .extra-details {
+                display: block !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .top-actions {
+                justify-content: center;
+            }
+
+            .header-logo {
+                max-width: 220px;
+            }
+        }
+        .mail {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: solid white 1px
+        }
+            .mail:Hover {
+                background-color: transparent;
+                color: var(--primary-blue);
+                border: solid var(--primary-blue) 1px
+            }
+
+        .gallery-section {
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-title {
+            text-align: center;
+            color: var(--dark-blue);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+
+            .gallery-item:hover img {
+                transform: scale(1.08);             }
+
+            .gallery-item::after {
+                content: '⤢';
+                position: absolute;
+                bottom: 4px;
+                right: 4px;
+                font-size: 1.2rem;
+                font-weight: bold;
+                background: rgba(0, 0, 0, 0.65);
+                color: white;
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0.9;
+                pointer-events: none;
+                z-index: 2;
+            }
+
+        .gallery-carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden; 
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: calc(25% - 11.25px); 
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* ביטול התכווצות התמונות */
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: auto;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        /* עיצוב כפתורי הניווט */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            color: black;
+            border: none;
+            font-size: 1.5rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+            transition: background 0.3s ease;
+        }
+
+            .carousel-btn:hover {
+                color: var(--primary-blue);
+            }
+
+        .prev-btn {
+            right: -10px;
+        }
+
+        .next-btn {
+            left: -10px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        #lightbox-img {
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* עיצוב חלק שאלות נפוצות */
+        .faq-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: auto
+        }
+
+        .faq-title {
+            text-align: center;
+            color: var(--dark-blue);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--details-border);
+            margin-bottom: 10px;
+        }
+
+            .faq-item:last-child {
+                border-bottom: none;
+            }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            text-align: right;
+            padding: 15px 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+
+            .faq-question:hover {
+                color: var(--primary-blue);
+            }
+
+        .faq-icon {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 10px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 150px;
+            padding: 10px 10px 15px 10px;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+
+        .audio-player-container {
+            position: relative;
+            display: inline-flex;
+            vertical-align: middle;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+            padding-bottom: 15px;
+            margin-bottom: -15px;
+        }
+
+
+        .playlist-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% - 10px);
+            right: 0;
+            background-color: #ffffff;
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        .audio-player-container:hover .playlist-dropdown {
+            display: block;
+        }
+
+        .playlist-dropdown button {
+            width: 100%;
+            padding: 10px 14px;
+            background: none;
+            border: none;
+            text-align: right;
+            font-size: 14px;
+            cursor: pointer;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+            .playlist-dropdown button:hover {
+                background-color: #f1f1f1;
+            }
+
+            .playlist-dropdown button.active {
+                font-weight: bold;
+                color: #2980b9;
+                background-color: #eaf2f8;
+            }
+    </style>
+</head>
+<body>
+    <div class="top-actions">
+        <a href="לוז אוגוסט 2026.pdf"
+           target="_blank"
+           style="text-decoration: none;"
+           class="action-btn">
+            לזמני שחיה חופשית
+        </a>
+
+
+        <div class="audio-player-container">
+            <!-- כפתור הפעלה/עצירה ראשי -->
+            <button class="audio-toggle-btn" id="audioBtn" onclick="toggleAudio()">🔊 הפעל מוזיקה</button>
+
+            <!-- תפריט בחירת שירים שיופיע בעת הפעלה -->
+            <div class="playlist-dropdown" id="playlistMenu">
+                <button onclick="selectTrack(6)" id="track-0">🎵 מנגינת רקע 1</button>
+                <button onclick="selectTrack(1)" id="track-1">🎵 מנגינת רקע 2</button>
+                <button onclick="selectTrack(2)" id="track-2">🎵 מנגינת רקע 3</button>
+                <button onclick="selectTrack(3)" id="track-2">🎵 מנגינת רקע 4</button>
+                <button onclick="selectTrack(4)" id="track-2">🎵 מנגינת רקע 5</button>
+                <button onclick="selectTrack(5)" id="track-2">🎵 מנגינת רקע 6</button>
+                <button onclick="selectTrack(7)" id="track-2">🎵 מנגינת רקע 7</button>
+                <button onclick="selectTrack(8)" id="track-2">🎵 מנגינת רקע 8</button>
+            </div>
+        </div>
+
+        <!-- אלמנט הנגן -->
+        <audio id="bgAudio" preload="auto">
+            <source id="audioSource" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
+
+
+        <button class="action-btn" onclick="window.print()"> להדפסה </button>
+        <button class="action-btn" onclick="toggleDarkMode()" id="darkModeBtn">🌙</button>
+    </div>
+
+    <header>
+        <img src="נופש.png" alt="לוגו נופש" class="header-logo">
+    </header>
+
+    <div class="countdown-container">
+        <div class="countdown-title">⏳ ספירה לאחור:</div>
+        <div class="countdown-timer">
+            <div class="timer-unit">
+                <span class="timer-value" id="days"></span>
+                <span class="timer-label">ימים</span>
+            </div>
+            <div class="timer-unit">
+                <span class="timer-value" id="hours"></span>
+                <span class="timer-label">שעות</span>
+            </div>
+            <div class="timer-unit">
+                <span class="timer-value" id="minutes"></span>
+                <span class="timer-label">דקות</span>
+            </div>
+            <div class="timer-unit">
+                <span class="timer-value" id="seconds"></span>
+                <span class="timer-label">שניות</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- לוח הזמנים ל-4 ימים -->
+    <div class="container">
+
+        <!-- יום 1 -->
+        <div class="day-card day-1">
+            <div class="day-header">
+                <h2>יום 1 - הגעה והתארגנות</h2>
+                <div class="date">יום ראשון</div>
+            </div>
+            <ul class="timeline">
+                <li class="timeline-item">
+                    <div class="time">15:00 - 16:30</div>
+                    <div class="event-title">קבלת פנים וחדרים</div>
+                    <div class="event-desc">הגעה לוילה, חלוקת חדרים התארגנות בחדרים.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> רחוב הרב שינברג 2.<br>
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">16:30 - 18:00</div>
+                    <div class="event-title">מפגש פתיחה וכיבוד</div>
+                    <div class="event-desc">שתייה חמה וקרה, עוגות ופירות.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> סלון הוילה.<br>
+                        ☕ <b>כיבוד:</b> פינת קפה, שתיה קלה, עוגות ופירות העונה.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">18:00</div>
+                    <div class="event-title">ארוחת ערב חגיגית</div>
+                    <div class="event-desc">ששששששש זה הפתעה</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> חדר האוכל המרכזי.<br>
+                        🍽️ <b>סגנון:</b> חגיגי ומפנק!! חלבי בכשרות מהודרת.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- יום 2 -->
+        <div class="day-card day-2">
+            <div class="day-header">
+                <h2>יום 2 - חוויות בטבע</h2>
+                <div class="date">יום שני</div>
+            </div>
+            <ul class="timeline">
+                <li class="timeline-item">
+                    <div class="time">09:00 - 10:30</div>
+                    <div class="event-title">ארוחת בוקר</div>
+                    <div class="event-desc">בופה עשיר וטרי לפתיחת הבוקר.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> מטבח <br>
+                        ⏰ נא להגיע בזמן כדי לא לעכב את היציאה לטיול.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">15:00</div>
+                    <div class="event-title">ארוחת צהריים</div>
+                    <div class="event-desc">ארוחה משפחתית מזינה בחיק הטבע ובאווירה פסטורלית</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> בחצר המתחם.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">15:30 - 21:00</div>
+                    <div class="event-title">בריכת מתתיהו – לנשים</div>
+                    <div class="event-desc">זמן איכות ומרגוע בבריכה פתוחה ומטופחת, עם מדשאות רחבות ידיים</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        🚌 <b>הסעה:</b> הליכה רגלית לעבר הבריכה במושב.<br>
+                        👟 <b>ציוד נדרש:</b> ציוד לבריכה, שתיה ואוכל
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">21:00</div>
+                    <div class="event-title">משחק חווייתי</div>
+                    <div class="event-desc">פעילות משחקית מגבשת לכל המשפחה</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> אולם האירועים במתחם.<br>
+                        🎲 כל האביזרים והציוד מסופקים במקום.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- יום 3 -->
+        <div class="day-card day-3">
+            <div class="day-header">
+                <h2>יום 3 - יום אתגר וגיבוש</h2>
+                <div class="date">יום שלישי</div>
+            </div>
+            <ul class="timeline">
+                <li class="timeline-item">
+                    <div class="time">09:00 - 12:00</div>
+                    <div class="event-title">ארוחת בוקר</div>
+                    <div class="event-desc">ארוחת בוקר מזינה.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> חדר האוכל.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">13:00</div>
+                    <div class="event-title">תכנית מבית תכנות</div>
+                    <div class="event-desc">זיצ עם הזו"צ - תכנית מאתגרת ומחדדת את המח. </div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> אולם המתחם.<br>
+                        הזדמנות נפלאה להתכנסות, שירה ושיח משותף באווירה מרוממת.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">17:00</div>
+                    <div class="event-title">ארוחת צהריים</div>
+                    <div class="event-desc">ארוחה חמה ממטבח השפית.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> חדר האוכל.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">20:00</div>
+                    <div class="event-title">יציאה משותפת לפארק</div>
+                    <div class="event-desc">זמן איכות, גיבוש והנאה לכל המשפחה בחיק הטבע</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> נקודת המפגש בכניסה לפארק.<br>
+                        💡 מומלץ להצתייד בשתיה.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- יום 4 -->
+        <div class="day-card day-4">
+            <div class="day-header">
+                <h2>יום 4 - סיכום ופרידה</h2>
+                <div class="date">יום רביעי</div>
+            </div>
+            <ul class="timeline">
+                <li class="timeline-item">
+                    <div class="time">08:30 - 09:30</div>
+                    <div class="event-title">ארוחת בוקר למשכימים</div>
+                    <div class="event-desc">ארוחת בוקר אחרונה.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📍 <b>מיקום:</b> חדר האוכל.
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">10:00 - 11:30</div>
+                    <div class="event-title">שיחת סיכום ותמונות</div>
+                    <div class="event-desc">צילום תמונה קבוצתית למזכרת וסיכום חוויות.</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        📸 <b>צילום:</b> הצילום יתקיים ברחבת הכניסה ב-10:30 בדיוק!
+                    </div>
+                </li>
+                <li class="timeline-item">
+                    <div class="time">12:00</div>
+                    <div class="event-title">פינוי חדרים ונסיעה לשלום</div>
+                    <div class="event-desc">אריזה, חלוקת צידה לדרך ונסיעה בטוחה הביתה!</div>
+                    <button class="toggle-btn" onclick="toggleDetails(this)"><span>✨ פרטים נוספים</span></button>
+                    <div class="extra-details">
+                        🔑 יש לעזוב את השטח עד השעה 12:00 בדיוק.
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- חלק מידע נוסף -->
+    <div class="info-section">
+
+        <div class="info-card" style="border-top-color: var(--primary-pink);">
+            <h3>🎒 מה צריך לקחת / ציוד מומלץ</h3>
+            <ul>
+                <li>בגדים נוחים להחלפה לכל הימים.</li>
+                <li>נעלי הליכה נוחות לטיול.</li>
+                <li>כובע, קרם הגנה ובקבוק מים אישי.</li>
+                <li>משחקי קופסה שתרצו לשתף עם כולם.</li>
+            </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: var(--primary-blue);">
+            <h3>📍 מיקום ודגשים חשובים</h3>
+            <ul>
+                <li><b>מיקום הנופש:</b> מושב מתתיהו </li>
+                <li><b>קבלת חדרים:</b> החל מהשעה 15:00.</li>
+                <li><b>פינוי חדרים:</b> עד השעה 12:00 ביום האחרון.</li>
+                <li>נא להגיע בזמן לפעילויות המשותפות.</li>
+            </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: var(--day3-color);">
+            <h3>📞 צוות המארגנים</h3>
+            <ul>
+                <li><b>צוות הארגון:</b> אבא ואמא </li>
+                <li><b>איש קשר לפניות:</b> 053-4131512</li>
+                <li><b>אחראי ציוד ופעילויות:</b> שני</li>
+            </ul>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=SHANI131512@GMAIL.COM&su=%D7%A0%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%94%D7%A2%D7%A8%D7%95%D7%AA%20%D7%95%D7%94%D7%90%D7%A8%D7%95%D7%AA"
+               target="_blank"
+               class="mail">
+                ✉️ להערות והארות -- לחץ כאן
+            </a>
+        </div>
+    </div>
+    </br>
+
+    <div class="gallery-section">
+        <!--<h2 class="gallery-title">📸 גלריית חוויות ותמונות</h2>-->
+
+        <div class="gallery-carousel-wrapper">
+            <button class="carousel-btn prev-btn" onclick="scrollGallery(-1)">❮</button>
+
+            <div class="gallery-grid" id="galleryGrid">
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="1.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="2.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="4.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="3.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="5.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="6.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="7.png" alt="תמונה מהנופש">
+                </div>
+                <div class="gallery-item" onclick="openLightbox(this)">
+                    <img src="8.png" alt="תמונה מהנופש">
+                </div>
+            </div>
+
+            <button class="carousel-btn next-btn" onclick="scrollGallery(1)">❯</button>
+        </div>
+    </div>
+
+    <!-- חלון תצוגה מוגדלת (Lightbox) -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="תמונה מוגדלת">
+    </div>
+
+    <!-- חלק שאלות נפוצות -->
+    <div class="faq-section">
+        <h2 class="faq-title">❓ שאלות נפוצות</h2>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>האם מסופקים מגבות ומצעים בחדרים?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>כן, כל החדרים מאובזרים במצעים נקיים ומגבות לשימוש האורחים.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>מה עושים במקרה של רגישויות למזון או אלרגיות?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>חשוב לעדכן את צוות הארגון מראש כדי שנוכל להיערך ולהציע מנות מותאמות אישית בארוחות.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>מה קורה במקרה של איחור להגעה?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>במקרה של איחור מעבר לשעת קבלת החדרים, מומלץ ליצור קשר טלפוני מראש עם צוות הארגון כדי שנוכל להיערך ולדאוג לכם למפתח ולכל הפרטים הנדרשים.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>האם יש חניה במקום?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>כן, במתחם קיימת חניה מסודרת וללא תשלום עבור אורחי הנופש.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                <span>האם יש במתחם מקרר ומייחם?</span>
+                <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+                <p>כן, בחדרים ובשטחים המרכזיים ישנם מקררים ופינות קפה המאובזרות במייחם מים חמים לנוחות האורחים.</p>
+            </div>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=SHANI131512@GMAIL.COM&su=%D7%90%D7%99%D7%96%D7%94%20%D7%9E%D7%99%D7%93%D7%A2%20%D7%97%D7%A1%D7%A8%20%D7%9C%D7%9B%D7%9D%3F"
+               target="_blank"
+               class="mail"
+               style="float: left;">
+                לשאלות -- לחץ כאן
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>🌟 מאחלים לכולנו נופש מופלא, שמח ומלא בחוויות נהדרות! 🌟</p>
+    </footer>
+
+    <script>
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+
+            lightboxImg.src = img.src;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        function toggleDetails(btn) {
+            const details = btn.nextElementSibling;
+            const span = btn.querySelector('span');
+
+            if (details.classList.contains('open')) {
+                details.classList.remove('open');
+                span.textContent = '✨ פרטים נוספים';
+            } else {
+                details.classList.add('open');
+                span.textContent = '✖ סגור פרטים';
+            }
+        }
+        function toggleFaq(button) {
+            const faqItem = button.parentElement;
+            faqItem.classList.toggle('active');
+        }
+
+        let currentTrackIndex = 0;
+        const audio = document.getElementById('bgAudio');
+        const audioSource = document.getElementById('audioSource');
+        const audioBtn = document.getElementById('audioBtn');
+        const playlistMenu = document.getElementById('playlistMenu');
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                audioBtn.innerText = "🔇 עצור מוזיקה";
+                playlistMenu.classList.add('show-menu');
+                updateActiveButton();
+            } else {
+                audio.pause();
+                audioBtn.innerText = "🔊 הפעל מוזיקה";
+                playlistMenu.classList.remove('show-menu');
+            }
+        }
+
+        function selectTrack(trackNumber) {
+            const songUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-" + trackNumber + ".mp3";
+
+            audioSource.src = songUrl;
+            audio.load();
+            audio.play();
+
+            audioBtn.innerText = "🔇 עצור מוזיקה";
+            updateActiveButton();
+        }
+
+        function updateActiveButton() {
+            const totalTracks = 8;
+
+            for (let i = 1; i <= totalTracks; i++) {
+                const btn = document.getElementById(`track-${i}`);
+                if (btn) {
+                    btn.classList.toggle('active', i === currentTrackIndex);
+                }
+            }
+        }
+
+        // מעבר אוטומטי לשיר הבא בסיום
+        audio.onended = function () {
+            const totalTracks = 8;
+
+            currentTrackIndex = (currentTrackIndex % totalTracks) + 1;
+            selectTrack(currentTrackIndex);
+        };
+
+
+
+        const targetDate = new Date(2026, 7, 2, 15, 0, 0).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.querySelector('.countdown-container').innerHTML = '<div class="countdown-title">🎉 הנופש החל! 🎉</div>';
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(d).padStart(2, '0');
+            document.getElementById('hours').textContent = String(h).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const btn = document.getElementById('darkModeBtn');
+
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                btn.textContent = '☀️';
+            } else {
+                btn.textContent = '🌙';
+            }
+        }
+
+        let isAnimating = false;
+
+        function scrollGallery(direction) {
+            if (isAnimating) return;
+
+            const grid = document.getElementById('galleryGrid');
+            const items = grid.querySelectorAll('.gallery-item');
+            if (!items.length) return;
+
+            isAnimating = true;
+
+            // חישוב המרחק של תמונה אחת כולל המרווח
+            const itemWidth = items[0].offsetWidth;
+            const gap = parseFloat(getComputedStyle(grid).gap) || 15;
+            const step = itemWidth + gap;
+
+            if (direction === 1) {
+                grid.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                grid.style.transform = `translateX(${step}px)`;
+
+                setTimeout(() => {
+                    grid.style.transition = 'none';
+                    grid.appendChild(grid.firstElementChild); // העברת התמונה הראשונה לסוף
+                    grid.style.transform = 'translateX(0)';
+                    isAnimating = false;
+                }, 400);
+
+            } else if (direction === -1) {
+                grid.style.transition = 'none';
+                grid.insertBefore(grid.lastElementChild, grid.firstElementChild); // העברת התמונה האחרונה להתחלה
+                grid.style.transform = `translateX(${step}px)`; // הכנה בערך חיובי
+              
+                    requestAnimationFrame(() => {
+                        grid.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                        grid.style.transform = 'translateX(0)';
+                        setTimeout(() => {
+                            isAnimating = false;
+                        }, 400);
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
